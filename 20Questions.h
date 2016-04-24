@@ -1,61 +1,52 @@
-#ifndef 20QUESTIONS_H
-#define 20QUESTIONS_H
+#ifndef T20QUESTIONS_H
+#define T20QUESTIONS_H
+
+struct Questions
+{
+    std::string title;
+    bool TF;
+};
 
 struct answers
 {
     //The answer
-    std:string title;
-    //linked list
-    answers *next;
-    answers *previous;
+    std::string title; /// mouse, cat, elephant, plane, boat, etc.
+    bool possible; /// possible is false when one of its questions is contrary to using input
+
     //The questions
-    bool Q01; //is it alive
-    bool Q02; //is it bigger then a bread box
-    bool Q03; //does it have fir
-    bool Q03; //does it have gills
-    bool Q04; //does it have
-    bool Q05;
-    bool Q06;
-    bool Q07;
-    bool Q08;
-    bool Q09;
-    bool Q10;
-    bool Q11;
-    bool Q12;
-    bool Q13;
-    bool Q14;
-    bool Q15;
-    bool Q16;
-    bool Q17;
-    bool Q18;
-    bool Q19;
-    bool Q20;
+    vector<bool> questions; ///vector of true/false (if we do it this way we have to keep track of where all the questions are)
+    vector<Questions>
 };
 
-class 20Questions
+class T20Questions
 {
     public:
-        20Questions();
-        virtual ~20Questions();
+        T20Questions();
+        virtual ~T20Questions();
 
-        void readInLinkedList();
-        void printPossibleAnswers(vector<answers>);
+        ///Stage 1 methods (neccesary for doing 20 questions)
+        void ReadAnswerFile(char fileName); /// read in answer.txt file (takes first command line argument)
+        void Play20Questions();
         int NumPossibleAnswers(); // if this equals 1 then we have out best guess
-        void deleteAllNodes();
-        void AddNewAnswer(); // add a new answer to the text file
-        bool CheckAllAnswersForSame(bool Question); // find out if all the answers are the same for one question
+        bool CheckAllAnswersForSimilarQuestion(); // find out if all the answers are the same for one question
+
+        ///Stage 2 (ADD ONs)
+        void AddNewAnswer();
+        void printPossibleAnswers();
 
     protected:
     private:
+        ///STAGE 1
+        void LoadQuestions(); /// called from read file method
+        vector<answers>; ///class bin of answers
+        vector<string>; ///could hold a list of all questions here, it would be a map of their location a blueprint
+
+        ///STAGE 2 (not essential for 20 questions to happen)
         void addAnswer(std::string);
-        void addQuestion(); //currently not possible
-        vector<answers> seach(vector<answers>, bool); //to look at all answers in current vector for a spacific bool
-        deleteNode();
-        answers *head;
-        answers *tail;
+        void addQuestion(); ///something to think about // don't know how to add things not to end of file
 
         //could make a list and then delete nodes from it as we eliminated questions
         //could put all possible anwers into a vector and then redue vector as new info is aquired.
 };
 
-#endif // 20QUESTIONS_H
+#endif // T20QUESTIONS_H
