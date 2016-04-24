@@ -1,1 +1,6 @@
-
+Questions,is it alive,does it have hair,is it bigger than a breadbox,does it have a long neck,Question5,Question6
+Mouse,1,1,0,0,0,0
+Elephant,1,1,1,0,0,0
+Giraffe,1,1,1,1,0,0
+rock,0,0,0,0,0,0
+maniquine,0,1,1,0,0,0

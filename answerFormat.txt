@@ -1,0 +1,6 @@
+Questions,Q1,Q2,Q3,Q4,Q5,Q6
+Answer1,1,0,0,0,1,0
+Answer2,1,0,0,0,1,0
+
+//Answer could be true/false, or 0/1/5 (allowing for abaguity/unanswered, makes adding quesitons possible)
+
