@@ -4,8 +4,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-//#include <queue>
-//#include <climits>
 
 using namespace std;
 
@@ -27,44 +25,37 @@ TwentyQuestions::~TwentyQuestions()
 void TwentyQuestions::ReadAnswerFile(char *fileName)
 {
     string FileLine = "Blank";
-    //string InfoNugget = "Blank"; - Can declare this inside while loop
     ifstream ANSWERfile;
-    ANSWERfile.open(fileName); //open the file
-    //int new_ranking;
-    //std::string new_title = "Blank";
-    //int new_year;
-    //int new_quantity
+    //Open the file
+    ANSWERfile.open(fileName);
+    //Tracks which row of the file is being read
     int Yaxis = 0;
+    //Tracks which column of the file is being read
     int Xaxis = 0;
-    //int itemCounter = 1; // to determine which item we are on in the movie file line
     if(ANSWERfile.good())
     {
-        //cout << "opened and reading the file: " << fileName << endl;
         while(getline(ANSWERfile, FileLine))
-        {
+        { //Gets each line of the file
             string InfoNugget;
+            //Processes file line through stringstream
             stringstream ss(FileLine);
+            //Parses line by using ',' delimiter
             while(getline(ss, InfoNugget, ','))
-            {//cout << InfoNugget << endl;
-
+            {
                 if(Yaxis == 0)
-                {//read in question
+                { //Read in questions
                     if(Xaxis > 0)
-                    {
                         QuestionMap.push_back(InfoNugget);
-                    }
                 }
                 else
-                {//read in answers
+                { //Read in answers, if Yaxis > 0
                     if(Xaxis == 0)
-                    {//Make New Answer
-                        //Answers *NewAnswer = new Answers;
+                    { //Make New Answer
                         Answers NewAnswer;
                         NewAnswer.title = InfoNugget;
                         NewAnswer.possible = true;
                         for(int i = 0; i < QuestionMap.size(); i++)
-                        {
-                            //Questions *newQuestion = new Questions;
+                        { //Stores question table for each answer
                             Questions newQuestion;
                             newQuestion.title = QuestionMap[i];
                             newQuestion.TF = true;
@@ -73,22 +64,19 @@ void TwentyQuestions::ReadAnswerFile(char *fileName)
                     AnswerVector.push_back(NewAnswer);
                     }
                     else
-                    {//Enter true/false for all answer's questions
+                    { //Stores truth table from file for each answer
                         if(InfoNugget == "1")
-                        {
                             AnswerVector[Yaxis-1].AnsQuestVector[Xaxis-1].TF = true;
-                        }
                         if(InfoNugget == "0")
-                        {
                             AnswerVector[Yaxis-1].AnsQuestVector[Xaxis-1].TF = false;
-                        }
                     }
                 }
+                //Increments Xaxis inside the loop
                 Xaxis++;
             }
-            //cout << "about to add: " << new_title << endl;
-            //addMovieNode(new_ranking, new_title, new_year, new_quantity);
+            //Resets Xaxis for next line
             Xaxis = 0;
+            //Increments Yaxis
             Yaxis++;
         }
     }
@@ -100,17 +88,13 @@ void TwentyQuestions::ReadAnswerFile(char *fileName)
 }
 
 void TwentyQuestions::Play20Questions()
-{
+{ //Calls 20 questons method - method is separate call for use by other methods if necessary.
     Run20Questions();
 }
 
-///Private
-void TwentyQuestions::LoadQuestions()
-{/// called from read file method
-
-}
 int TwentyQuestions::NumPossibleAnswers()
-{// if this equals 1 then we have our best guess
+{ //Calculates the  number of possible answers still available based on answers to questions thus far.
+    //Called in play 20 questions method.
     int PossibleAnswers = 0;
     for(int i = 0; i < AnswerVector.size(); i++)
     {
@@ -128,31 +112,56 @@ int TwentyQuestions::NumPossibleAnswers()
 
 ///Public
 
-bool TwentyQuestions::CheckAllAnswersForSimilarQuestion()
-{// find out if all the answers are the same for one question
-
-}
-
 void TwentyQuestions::printQuestions()
-{
+{ //Prints out all questions.
     cout << "The questions available are:" << endl;
     for (int i = 0; i < QuestionMap.size(); i++)
         cout << QuestionMap[i] << endl;
 }
 
+void TwentyQuestions::printTruthTable()
+{ //Prints truth table for a specific answer.
+  //Stores users choice.
+  string searchAnswer;
+  cout << "The current answers stored are:" << endl;
+  //Prints out all answers stored.
+  for (int i = 0; i < AnswerVector.size(); i++)
+    cout << AnswerVector[i].title << endl;
+  cout << "Which answer would you like to see?" << endl;
+  getline (cin, searchAnswer);
+  //Holds the answer the user is searching for.
+  Answers foundAnswer;
+  //Matches requested answer to element in the vector.
+  for (int i = 0; i < AnswerVector.size(); i++)
+  {
+    if (AnswerVector[i].title == searchAnswer)
+      foundAnswer = AnswerVector[i];
+  }
+  cout << "The truthTable for " << foundAnswer.title << " is:" << endl;
+  //Prints out the results for each question for the selected answer
+  for (int i = 0; i < foundAnswer.AnsQuestVector.size(); i++)
+  {
+    cout << foundAnswer.AnsQuestVector[i].title << " is: ";
+    if (foundAnswer.AnsQuestVector[i].TF == 1)
+        cout << "true." <<endl;
+    if (foundAnswer.AnsQuestVector[i].TF == 0)
+        cout << "false." <<endl;
+  }
+}
+
 void TwentyQuestions::AddNewQuestion(std::string NewQuestion)
-{   //TODO - Have to figure out a way to insert questions into queue.
-    //Currently, program will select answer before reaching question.
-    //Also, while putting in new answers works alright, will have to rewrite function  to go through all questions.
+{ //Adds new question to program
+    //Stores the new question in the QuestionMap vector.
     QuestionMap.push_back(NewQuestion);
+    //Container for new question to add to each answer's question map.
     Questions anotherQuestion;
     anotherQuestion.title = NewQuestion;
     anotherQuestion.TF = true;
     cout << "Now for the hard part:" << endl;
+    //Adds container to each answer's question map
     for (int i = 0; i < AnswerVector.size(); i++)
-    {
         AnswerVector[i].AnsQuestVector.push_back(anotherQuestion);
-    }
+
     for(int i = 0; i < AnswerVector.size(); i++)
     {
         string validAnswer;
@@ -174,6 +183,7 @@ void TwentyQuestions::savetoFile()
     ofstream questionFile ("answers.txt");
     if (questionFile.is_open())
     {
+        questionFile << "Questions,";
         for (int i = 0; i < QuestionMap.size(); i++)
         {
             questionFile << QuestionMap[i];
@@ -186,10 +196,11 @@ void TwentyQuestions::savetoFile()
             questionFile << ",";
             for (int j = 0; j < AnswerVector[i].AnsQuestVector.size(); j++)
             {
-                if (AnswerVector[i].AnsQuestVector[j].TF = true)
+                /*if (AnswerVector[i].AnsQuestVector[j].TF = true)
                     questionFile << "1,";
                 if (AnswerVector[i].AnsQuestVector[j].TF = false)
-                    questionFile << "0,";
+                    questionFile << "0,";*/
+                questionFile << AnswerVector[i].AnsQuestVector[j].TF << ",";
             }
             questionFile << '\n';
         }

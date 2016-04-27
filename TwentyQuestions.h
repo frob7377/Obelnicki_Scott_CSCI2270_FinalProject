@@ -1,24 +1,20 @@
 #ifndef TWENTYQUESTIONS_H
 #define TWENTYQUESTIONS_H
-//#include <iostream>
 #include <string>
 #include <vector>
 
 struct Questions
 {
-    std::string title;
-    bool TF;
+    std::string title; //Stores each question
+    bool TF; //Stores whether the answer is a potential solution for the question
 };
 
 struct Answers
 {
     //The answer
-    std::string title; /// mouse, cat, elephant, plane, boat, etc.
-    bool possible; /// possible is false when one of its questions is contrary to using input
-
-    //The questions
-    //vector<bool> questions; ///vector of true/false (if we do it this way we have to keep track of where all the questions are)
-    std::vector<Questions> AnsQuestVector;
+    std::string title; //The answer value
+    bool possible; //Flag that determines whether or not the answer is still viable based on questions
+    std::vector<Questions> AnsQuestVector; //Stores whether or not each answer is a potential solutaion to each question
 };
 
 class TwentyQuestions
@@ -28,32 +24,23 @@ class TwentyQuestions
         virtual ~TwentyQuestions();
 
         ///Stage 1 methods (neccesary for doing 20 questions)
-        void ReadAnswerFile(char *fileName); /// read in answer.txt file (takes first command line argument)
-        void Play20Questions();
+        void ReadAnswerFile(char *fileName); // read in answer.txt file (takes first command line argument)
+        void Play20Questions(); //Calls Run20Questions
 
         ///Stage 2 (ADD ONs)
-        int NumPossibleAnswers(); // if this equals 1 then we have out best guess
-        bool CheckAllAnswersForSimilarQuestion(); // find out if all the answers are the same for one question
-        void AddNewAnswer();
-        void AddNewQuestion(std::string NewQuestion);
-        void printPossibleAnswers();
-        void printQuestions();
-        void savetoFile();
+        void AddNewAnswer(); //Adds new answer into program
+        void AddNewQuestion(std::string NewQuestion); //Adds new question into program
+        int NumPossibleAnswers(); //Calculates the number of answers that are still possible
+        void printPossibleAnswers(); //Prints out all possible answers, also used during program
+        void printQuestions(); //Prints out all questions stored in the program
+        void printTruthTable(); //Prints truth table for a specified answer
+        void savetoFile(); //Saves added answers and questions into file
 
     protected:
     private:
-        ///STAGE 1
-        void LoadQuestions(); /// called from read file method
-        std::vector<Answers> AnswerVector; ///class bin of answers
-        std::vector<std::string> QuestionMap; ///could hold a list of all questions here, it would be a map of their location a blueprint
-
-        ///STAGE 2 (not essential for 20 questions to happen)
-        std::string Run20Questions();
-        //void addAnswer(std::string);
-        //void addQuestion(); ///something to think about // don't know how to add things not to end of file
-
-        //could make a list and then delete nodes from it as we eliminated questions
-        //could put all possible anwers into a vector and then redue vector as new info is aquired.
+        std::vector<Answers> AnswerVector; //Default storage location for answer vector
+        std::vector<std::string> QuestionMap; //Holds the question values
+        std::string Run20Questions(); //Main method which can be called from multiple methods if necessary.
 };
 
 #endif // TWENTYQUESTIONS_H
