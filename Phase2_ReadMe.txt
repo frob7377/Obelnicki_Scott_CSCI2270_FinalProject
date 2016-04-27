@@ -8,9 +8,9 @@ structures to hold our questions and answers.  The user is able to navigate the 
 How to Run
 There is a class header file called, TwentyQuestions.h, a class library called TwentyQuestions.cpp, and a command file from which game menu is run called main.cpp.
 
-The file ‘answers.txt’ should be run as a command line argument.
+The file ‘answers.txt’ is the default file. The user can specify a different file name if they wish and have a custom file.
 
-These four file and a c++ compiler are all that you will need to run the game.  No special operations, outside those used to do the last 10 or so assignments, are necessary.
+These four files and a c++ compiler are all that you will need to run the game.  No special operations, outside those used to do the last 10 or so assignments, are necessary.
 
 Dependencies
 None at this time.
