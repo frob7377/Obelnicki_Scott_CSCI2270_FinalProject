@@ -24,7 +24,8 @@ class TwentyQuestions
         virtual ~TwentyQuestions();
 
         ///Stage 1 methods (neccesary for doing 20 questions)
-        void ReadAnswerFile(char *fileName); // read in answer.txt file (takes first command line argument)
+        std::string findFileName(); //Allows the user to enter a custom file name.
+        void ReadAnswerFile(std::string); // read in answer.txt file (takes first command line argument)
         void Play20Questions(); //Calls Run20Questions
 
         ///Stage 2 (ADD ONs)

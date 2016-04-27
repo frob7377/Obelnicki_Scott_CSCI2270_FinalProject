@@ -1,8 +1,7 @@
 // John M. Scott & Frank D. Obelnicki
 // Final Project
-//frame from assignment 10
-//20 Questions
-//Using no Trees
+// "20" Questions
+// 04/24/16
 
 #include <iostream>
 #include "TwentyQuestions.h"
@@ -13,9 +12,12 @@ int main(int argc, char* argv[])
 {
     //Build Class
     TwentyQuestions original;
-    original.ReadAnswerFile( "answers.txt"/*argv[1]*/);
-
+    //Calls method of class that allows for custom files.
+    string fileName = original.findFileName();
+    //Reads in questions and answers from file.
+    original.ReadAnswerFile(fileName);
     int menuChoice = 0;
+    //Loops until a valid entry is keyed by user. Each menu choice except exit will reset menuChoice to zero, so the loop continues.
     while(menuChoice != 1 and menuChoice != 2 and menuChoice != 3 and menuChoice != 4 and menuChoice != 5 and menuChoice != 6 and menuChoice != 7)
     {
 
@@ -27,53 +29,43 @@ int main(int argc, char* argv[])
         cout << "5. Print All Questions" << endl;
         cout << "6. Print a Truth Table" << endl;
         cout << "7. Quit" << endl;
-
-        //char choice;
         cin >> menuChoice;
-        cin.ignore(); // something about ditching a \n in the stream?  Apparently it gets picked up by the next getline()
-
+        cin.ignore();
         if (menuChoice == 1)
-        {//Play 20 Questions
+        { //Play 20 Questions
             original.Play20Questions();
             menuChoice = 0;
         }
         else if (menuChoice == 2)
-        {//Add Answer
-            /*string newAnswer;
-
-            cout << "Enter New Answer:" << endl;
-            getline(cin, newAnswer);
-            */
+        { //Add answer
             original.AddNewAnswer();
             menuChoice = 0;
         }
         else if (menuChoice == 3)
-        {//Add Question
+        { //Add question
             string question;
-
             cout << "Enter New Question:" << endl;
-            getline(cin, question); // Don't know how to deal with spaces and other shit
-
+            getline(cin, question);
             original.AddNewQuestion(question);
             menuChoice = 0;
         }
         else if (menuChoice == 4)
-        {//Print All Answers
+        { //Print all answers
             original.printPossibleAnswers();
             menuChoice = 0;
         }
         else if (menuChoice == 5)
-        {
+        { //Print all questions
             original.printQuestions();
             menuChoice = 0;
         }
         else if (menuChoice == 6)
-        {
+        { //Print truth table
           original.printTruthTable();
           menuChoice = 0;
         }
         else if (menuChoice == 7)
-        {
+        { //Exit
             original.savetoFile();
             cout << "Goodbye!" << endl;
             break;

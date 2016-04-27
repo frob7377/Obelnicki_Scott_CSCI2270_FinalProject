@@ -22,8 +22,28 @@ TwentyQuestions::~TwentyQuestions()
 ////////////////////////////////////////////////////
 
 ///Public
-void TwentyQuestions::ReadAnswerFile(char *fileName)
-{
+string TwentyQuestions::findFileName()
+{ //Allows the user to enter a custom file name if they have their own question file
+    string input, fileName = "answers.txt";
+    //Loops until valid input is entered.
+    while (input != "Y" && input != "y" && input != "N" && input != "n")
+    {
+        cout << "Would you like to use a custom question and answer file?" << endl;
+        getline(cin, input);
+    }
+    if (input == "y" || input == "Y")
+    {
+        cout << "Enter the file name:" << endl;
+        getline(cin, fileName);
+        return fileName;
+    }
+    return fileName;
+}
+
+void TwentyQuestions::ReadAnswerFile(string fileTitle)
+{ //Reads questions and answers in from file
+    //Converts string into characters
+    char *fileName = const_cast<char*>(fileTitle.c_str());
     string FileLine = "Blank";
     ifstream ANSWERfile;
     //Open the file
@@ -92,6 +112,80 @@ void TwentyQuestions::Play20Questions()
     Run20Questions();
 }
 
+////////////////////////////////////////////////////
+///Stage 2 (ADD ONs)////////////////////////////////
+////////////////////////////////////////////////////
+
+///Public
+
+void TwentyQuestions::AddNewAnswer()
+{ //Adds a new answer into program
+    string newAnswer;
+    //Queries user for the title of the new answer
+    cout << "Enter the answer you would like to add to the program:" << endl;
+    getline (cin, newAnswer);
+    //Container for new answer
+    Answers anotherAnswer;
+    anotherAnswer.title = newAnswer;
+    anotherAnswer.possible = true;
+    //Stores the questions available in the new answer's question map
+    for (int i = 0; i < QuestionMap.size(); i++)
+    {
+        Questions newQuestion;
+        newQuestion.title = QuestionMap[i];
+        anotherAnswer.AnsQuestVector.push_back(newQuestion);
+    }
+    //Generates truth table for new answer
+    for (int i = 0; i < anotherAnswer.AnsQuestVector.size(); i++)
+    {
+        string validAnswer;
+        //Loops until a valid input is entered
+        while (validAnswer != "Y" && validAnswer != "y" && validAnswer != "N" && validAnswer != "n")
+        {
+            cout << "Does " << newAnswer << " answer this question: " << anotherAnswer.AnsQuestVector[i].title << "?" << endl;
+            getline(cin, validAnswer);
+        }
+        //Stores specific values in truth table
+        if(validAnswer == "N" || validAnswer == "n")
+            anotherAnswer.AnsQuestVector[i].TF = false;
+        else
+            anotherAnswer.AnsQuestVector[i].TF = true;
+    }
+    AnswerVector.push_back(anotherAnswer);
+    cout << "Answer added!" << endl;
+}
+
+void TwentyQuestions::AddNewQuestion(std::string NewQuestion)
+{ //Adds new question to program
+    //Stores the new question in the QuestionMap vector.
+    QuestionMap.push_back(NewQuestion);
+    //Container for new question to add to each answer's question map.
+    Questions anotherQuestion;
+    anotherQuestion.title = NewQuestion;
+    anotherQuestion.TF = true;
+    cout << "Now for the hard part:" << endl;
+    //Adds container to each answer's question map
+    for (int i = 0; i < AnswerVector.size(); i++)
+        AnswerVector[i].AnsQuestVector.push_back(anotherQuestion);
+    //Updates the truth table for each answer with respect to the new question
+    for(int i = 0; i < AnswerVector.size(); i++)
+    {
+        string validAnswer;
+        int ansIndex = AnswerVector[i].AnsQuestVector.size();
+        //Loops until a valid answer is entered
+        while (validAnswer != "Y" && validAnswer != "y" && validAnswer != "N" && validAnswer != "n")
+        {
+            cout << "Is answer: " << AnswerVector[i].title << " a solution to this question? " << endl;
+            getline(cin, validAnswer);
+        }
+        //Stores response to question in answer's truth table
+        if(validAnswer == "N" || validAnswer == "n")
+            AnswerVector[i].AnsQuestVector[ansIndex-1].TF = false;
+        else
+            AnswerVector[i].AnsQuestVector[ansIndex-1].TF = true;
+    }
+}
+
 int TwentyQuestions::NumPossibleAnswers()
 { //Calculates the  number of possible answers still available based on answers to questions thus far.
     //Called in play 20 questions method.
@@ -106,11 +200,23 @@ int TwentyQuestions::NumPossibleAnswers()
     return PossibleAnswers;
 }
 
-////////////////////////////////////////////////////
-///Stage 2 (ADD ONs)////////////////////////////////
-////////////////////////////////////////////////////
-
-///Public
+void TwentyQuestions::printPossibleAnswers()
+{ //Prints out whether or not each answer is still possible.
+    //Prints out possible solutions.
+    cout << "The following answers are still possible:" << endl;
+    for(int i = 0; i < AnswerVector.size(); i++)
+    {
+        if (AnswerVector[i].possible == true)
+            cout << AnswerVector[i].title << endl;
+    }
+    //Prints out eliminated solutions.
+    cout << "The following answers are no longer possible:" << endl;
+    for(int i = 0; i < AnswerVector.size(); i++)
+    {
+        if (AnswerVector[i].possible == false)
+            cout << AnswerVector[i].title << endl;
+    }
+}
 
 void TwentyQuestions::printQuestions()
 { //Prints out all questions.
@@ -149,59 +255,31 @@ void TwentyQuestions::printTruthTable()
   }
 }
 
-void TwentyQuestions::AddNewQuestion(std::string NewQuestion)
-{ //Adds new question to program
-    //Stores the new question in the QuestionMap vector.
-    QuestionMap.push_back(NewQuestion);
-    //Container for new question to add to each answer's question map.
-    Questions anotherQuestion;
-    anotherQuestion.title = NewQuestion;
-    anotherQuestion.TF = true;
-    cout << "Now for the hard part:" << endl;
-    //Adds container to each answer's question map
-    for (int i = 0; i < AnswerVector.size(); i++)
-        AnswerVector[i].AnsQuestVector.push_back(anotherQuestion);
-
-    for(int i = 0; i < AnswerVector.size(); i++)
-    {
-        string validAnswer;
-        int ansIndex = AnswerVector[i].AnsQuestVector.size();
-        while (validAnswer != "Y" && validAnswer != "y" && validAnswer != "N" && validAnswer != "n")
-        {
-            cout << "Is answer: " << AnswerVector[i].title << " a solution to this question? " << endl;
-            getline(cin, validAnswer);
-        }
-        if(validAnswer == "N" || validAnswer == "n")
-            AnswerVector[i].AnsQuestVector[ansIndex-1].TF = false;
-        else
-            AnswerVector[i].AnsQuestVector[ansIndex-1].TF = true;
-    }
-}
-
 void TwentyQuestions::savetoFile()
 {
+    //Writes any added questions or answers to file
     ofstream questionFile ("answers.txt");
     if (questionFile.is_open())
     {
         questionFile << "Questions,";
+        //Writes each question into the first row of the file
         for (int i = 0; i < QuestionMap.size(); i++)
         {
             questionFile << QuestionMap[i];
             questionFile << ",";
         }
+        //Line break
         questionFile << '\n';
+        //Writes each answer and truth table into file on subsequent lines
         for (int i = 0; i < AnswerVector.size(); i++)
         {
+            //Stores the answer title
             questionFile << AnswerVector[i].title;
             questionFile << ",";
+            //Stores truth table on same row as answer title
             for (int j = 0; j < AnswerVector[i].AnsQuestVector.size(); j++)
-            {
-                /*if (AnswerVector[i].AnsQuestVector[j].TF = true)
-                    questionFile << "1,";
-                if (AnswerVector[i].AnsQuestVector[j].TF = false)
-                    questionFile << "0,";*/
                 questionFile << AnswerVector[i].AnsQuestVector[j].TF << ",";
-            }
+            //Line break
             questionFile << '\n';
         }
         questionFile.close();
@@ -209,159 +287,58 @@ void TwentyQuestions::savetoFile()
 
 }
 
-void TwentyQuestions::printPossibleAnswers()
-{
-    /*
-    cout << "here are the questions(from QuestionMap): " << endl;
-    for(int i = 0; i < QuestionMap.size(); i++)
-    {
-        cout << QuestionMap[i] << endl;
-    }
-
-    cout << "here are the answer titles: " << endl;
-    for(int i = 0; i < AnswerVector.size(); i++)
-    {
-        cout << AnswerVector[i].title << endl;
-    }
-    */
-    for(int i = 0; i < AnswerVector.size(); i++)
-    {
-        cout << "Is answer: " << AnswerVector[i].title << " still possible? " << AnswerVector[i].possible << endl;
-    }
-/*
-///Prints All Info Storied (exept if an answer is still possible)
-    for(int i = 0; i < AnswerVector.size(); i++)
-    {
-        cout << "here are the question titles from answer: " << AnswerVector[i].title << endl;
-        for(int j = 0; j < QuestionMap.size(); j++)
-        {
-            cout << AnswerVector[i].AnsQuestVector[j].title << endl;
-            cout << "the answer to that question is (1 true/0 false): " << AnswerVector[i].AnsQuestVector[j].TF << endl;
-        }
-*/
-}
-
-void TwentyQuestions::AddNewAnswer()
-{
-    string truthTable, newAnswer;
-    cout << "Enter the answer you would like to add to the program:" << endl;
-    getline (cin, newAnswer);
-    Answers anotherAnswer;
-    anotherAnswer.title = newAnswer;
-    anotherAnswer.possible = true;
-    for (int i = 0; i < QuestionMap.size(); i++)
-    {
-        Questions newQuestion;
-        newQuestion.title = QuestionMap[i];
-        anotherAnswer.AnsQuestVector.push_back(newQuestion);
-    }
-    for (int i = 0; i < anotherAnswer.AnsQuestVector.size(); i++)
-    {
-        string validAnswer;
-        while (validAnswer != "Y" && validAnswer != "y" && validAnswer != "N" && validAnswer != "n")
-        {
-            cout << "Does " << newAnswer << " answer this question: " << anotherAnswer.AnsQuestVector[i].title << "?" << endl;
-            getline(cin, validAnswer);
-        }
-        if(validAnswer == "N" || validAnswer == "n")
-            anotherAnswer.AnsQuestVector[i].TF = false;
-        else
-            anotherAnswer.AnsQuestVector[i].TF = true;
-    }
-    AnswerVector.push_back(anotherAnswer);
-    cout << "Answer added!" << endl;
-}
-
 ///Private
 
-/*void TwentyQuestions::addQuestion()
-{///something to think about // don't know how to add things not to end of file
-
-}*/
-
 string TwentyQuestions::Run20Questions()
-{
+{ //Main program which runs the "twenty" questions
     cout << "Think of a common thing that is not a proper noun, or specific person, place, or thing." << endl;
+    //Null string at this time.
     string truthTable;
     int questionsAsked = 0;
-    //fresh game, all answers possible
+    //New game, sets all answers as possible.
     for(int i = 0; i < AnswerVector.size(); i++)
     {
             AnswerVector[i].possible = true;
     }
+    //Loop which runs while there are still possible answers and the number of questions asked is less than equal to the total number of questions
     while(NumPossibleAnswers() > 1 && questionsAsked < QuestionMap.size())
     {
         string TrueOrFalse;
-        for(int i = 0; i < AnswerVector.size(); i++)
-        {
-            cout << "is answer: " << AnswerVector[i].title << " still possible? " << AnswerVector[i].possible << endl;
-        }
-        /*bool userInputGood = false;
-        while(!userInputGood)
-        {
-            cout << "is it: " << QuestionMap[questionsAsked] << "? (Y/N)" << endl;
-
-            getline(cin, TrueOrFalse);
-            if(TrueOrFalse == "Y" || TrueOrFalse == "y" || TrueOrFalse == "N" || TrueOrFalse == "n")
-            {
-                userInputGood = true;
-            }
-            else
-            {
-                cout << "please enter a Y or N" << endl;
-            }
-        }*/
+        printPossibleAnswers();
+        //Loop runs until valid answer is entered
         while (TrueOrFalse != "Y" && TrueOrFalse != "y" && TrueOrFalse != "N" && TrueOrFalse != "n")
         {
-            cout << "is it: " << QuestionMap[questionsAsked] << "? (Y/N)" << endl;
+            cout << "Is it: " << QuestionMap[questionsAsked] << "? (Y/N)" << endl;
             getline(cin, TrueOrFalse);
         }
         if(TrueOrFalse == "N" || TrueOrFalse == "n")
-        {// if the user answers no then any answer with
-            //truthTable.push_back('0');
+        { //Runs if the user's answer does not match the question (a 'no').
             for(int i = 0; i < AnswerVector.size(); i++)
             {
                 for(int j = 0; j < QuestionMap.size(); j++)
                 {
+                    //Evaluates if question title in answer vector matches title in question vector and the answer for this question is true (rather than false).
                     if(AnswerVector[i].AnsQuestVector[j].title == QuestionMap[questionsAsked] && AnswerVector[i].AnsQuestVector[j].TF == true)
-                    {
-                        cout << AnswerVector[i].title << " is not possible" << endl;
                         AnswerVector[i].possible = false;
-                        //cout << "check this question: " << AnswerVector[i].AnsQuestVector[j].title << endl;
-                        /*if(AnswerVector[i].AnsQuestVector[j].TF == true)
-                        {//  we are at the correct question for this answer and it is true, then it is not a possible answer
-                            cout << AnswerVector[i].title << " is not possible" << endl;
-                            AnswerVector[i].possible = false;
-                        }// Don't need an else*/
-                    }
                 }
             }
         }
         else
-        {// if the user answers yes then any answer with
-            //truthTable.push_back('1');
+        { //Runs if the user's answer matches the question (a 'yes').
             for(int i = 0; i < AnswerVector.size(); i++)
             {
                 for(int j = 0; j < QuestionMap.size(); j++)
                 {
+                    //Evaluates if question title in answer vector matches title in question vector and the answer to this question is false (rather than true).
                     if(AnswerVector[i].AnsQuestVector[j].title == QuestionMap[questionsAsked] && AnswerVector[i].AnsQuestVector[j].TF == false)
-                    {
-                        cout << AnswerVector[i].title << " is not possible" << endl;
                         AnswerVector[i].possible = false;
-                        //cout << "check this question: " << AnswerVector[i].AnsQuestVector[j].title << endl;
-                        /*if(AnswerVector[i].AnsQuestVector[j].TF == false)
-                        {//  we are at the correct question for this answer and it is true, then it is no a possible answer
-                            cout << AnswerVector[i].title << " is not possible" << endl;
-                            AnswerVector[i].possible = false;
-                        }// Don't need an else*/
-                    }
                 }
             }
         }
+        //Increments the number of questions asked
         questionsAsked++;
     }
-    cout << "We have found " << NumPossibleAnswers() << " match(s)," << endl;
-    cout << "they are:" << endl;
+    cout << "We have found " << NumPossibleAnswers() << " match(es), they are:" << endl;
     for(int i = 0; i < AnswerVector.size(); i++)
     {
         if(AnswerVector[i].possible == true)
@@ -369,6 +346,19 @@ string TwentyQuestions::Run20Questions()
             cout << AnswerVector[i].title << endl;
         }
     }
-    cout << "If this was not what you had in mind, feel free to add an answer in the main menu." << endl;
+    string correct;
+    //Loops until a valid entry is added
+    while (correct != "Y" && correct != "y" && correct != "N" && correct != "n")
+    {
+        cout << "Was this the answer you expected?" << endl;
+        getline (cin, correct);
+    }
+    //If the user's answer wasn't predicted, calls AddNewAnswer method.
+    if(correct == "N" || correct == "n")
+    {
+        cout << "Lets add your answer!" << endl;
+        AddNewAnswer();
+    }
+    //Null return at this time.
     return truthTable;
 }
