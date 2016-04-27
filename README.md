@@ -4,11 +4,9 @@ John Scott
 CSCI 2270
 Final Project
 
-Our final project will be a 20 questions program. We are thinking about using a n-ary tree to
-build a decision tree that will ask questions based on user responses. We would like to write
-the responses to a file that the program will read each time as it is loaded into memory. This
-will allow persistence between users. Another element we are considering incorporating is
-balancing the tree based on which questions are best at parsing information. Our final element
-would be to use a algorithm similar to a graph's shortest path algorithm to allow the user to
-input an answer and have the program predict how many questions it would take to guess that
-answers.
+Our final project is a 20-ish questions program. We are using a system of vectors and two
+structures to hold our questions and answers.  The user is able to navigate the answers based
+on simple yes or no questions.  The game is also fully scalable, while in the menu the user
+is able to add both questions and answers so that the game grows as it is used.  And so that
+we do not loose all the great user content, the information is saved in a text file called
+‘answers.txt’.
