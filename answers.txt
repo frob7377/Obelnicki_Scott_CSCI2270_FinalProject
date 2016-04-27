@@ -1,6 +1,16 @@
-Questions,is it alive,does it have hair,is it bigger than a breadbox,does it have a long neck,Does it have four legs,Does it live in the sea
-Mouse,1,1,0,0,1,0,
-Elephant,1,1,1,0,1,0,
-Giraffe,1,1,1,1,1,0,
-rock,0,0,0,0,0,0,
-maniquine,0,1,1,0,0,0,
+Questions,is it alive,does it have hair,is it bigger than a breadbox,does it have a long neck,does it have 4 legs,does it live in the sea,is it mineral,does it fight crime,is it vegitable,does it have plumbing,can a person live in it,does it commonly have a propeller,is it made for water,can it fly
+Mouse,1,1,0,0,1,0,0,1,0,1,0,0,0,0
+Elephant,1,1,1,0,1,0,0,1,0,1,0,0,0,0
+Giraffe,1,1,1,1,1,0,0,1,0,1,0,0,0,0
+pebble,0,0,0,0,0,1,1,1,0,0,0,0,0,1
+maniquine,0,1,1,0,0,0,0,1,0,0,0,0,0,0
+super hero,1,1,1,0,1,1,0,1,0,1,0,0,1,1
+broccoli,1,0,0,1,0,0,0,1,1,1,0,0,0,0
+zombie,0,1,1,0,0,0,0,1,0,0,0,0,0,0
+book,0,0,0,0,0,0,0,1,0,0,1,1,0,0
+house,0,0,1,0,0,0,0,0,0,1,1,1,0,0
+farts,1,0,1,0,0,0,1,1,1,0,1,0,0,1
+airplain,0,0,1,0,0,0,0,0,0,1,1,1,0,1
+boat,0,0,1,0,0,1,0,0,0,1,1,1,1,0
+sparrow,1,0,0,0,0,0,0,1,0,1,0,0,0,1
+alagator,1,0,1,1,1,0,0,1,0,1,0,0,1,0
