@@ -1,1 +1,7 @@
+is it alive,does it have hair,is it bigger than a breadbox,does it have a long neck,
+Mouse,1,1,1,1,1,1,
+Elephant,1,1,1,1,1,1,
+Giraffe,1,1,1,1,1,1,
+rock,1,1,1,1,1,1,
+maniquine,1,1,1,1,1,1,
 
