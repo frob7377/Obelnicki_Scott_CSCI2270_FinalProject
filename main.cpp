@@ -16,11 +16,13 @@ int main(int argc, char* argv[])
     string fileName = original.findFileName();
     //Reads in questions and answers from file.
     original.ReadAnswerFile(fileName);
-    int menuChoice = 0;
+    string menuChoice; ///changed to string to use getline
     //Loops until a valid entry is keyed by user. Each menu choice except exit will reset menuChoice to zero, so the loop continues.
-    while(menuChoice != 1 and menuChoice != 2 and menuChoice != 3 and menuChoice != 4 and menuChoice != 5 and menuChoice != 6 and menuChoice != 7)
+    //I added a bool to your code that will be set to true when user selects 7
+    //To fix the infinite loop, when user selects option not 1-7, code will prompt for new response
+    bool menu = false;
+    while(!menu)
     {
-
         cout << "======Main Menu======" << endl;
         cout << "1. Play 20 Questions" << endl;
         cout << "2. Add Answer" << endl;
@@ -29,46 +31,43 @@ int main(int argc, char* argv[])
         cout << "5. Print All Questions" << endl;
         cout << "6. Print a Truth Table" << endl;
         cout << "7. Quit" << endl;
-        cin >> menuChoice;
-        cin.ignore();
-        if (menuChoice == 1)
+        getline(cin,menuChoice);
+        if (menuChoice == "1")
         { //Play 20 Questions
             original.Play20Questions();
-            menuChoice = 0;
         }
-        else if (menuChoice == 2)
+        else if (menuChoice == "2")
         { //Add answer
             original.AddNewAnswer();
-            menuChoice = 0;
         }
-        else if (menuChoice == 3)
+        else if (menuChoice == "3")
         { //Add question
             string question;
             cout << "Enter New Question:" << endl;
             getline(cin, question);
             original.AddNewQuestion(question);
-            menuChoice = 0;
         }
-        else if (menuChoice == 4)
+        else if (menuChoice == "4")
         { //Print all answers
             original.printPossibleAnswers();
-            menuChoice = 0;
         }
-        else if (menuChoice == 5)
+        else if (menuChoice == "5")
         { //Print all questions
             original.printQuestions();
-            menuChoice = 0;
         }
-        else if (menuChoice == 6)
+        else if (menuChoice == "6")
         { //Print truth table
           original.printTruthTable();
-          menuChoice = 0;
         }
-        else if (menuChoice == 7)
+        else if (menuChoice == "7")
         { //Exit
             original.savetoFile();
             cout << "Goodbye!" << endl;
-            break;
+            menu = true; //set bool to true here, will exit loop
+        }
+        else
+        {
+            cout<<"Please enter a valid choice."<<endl;
         }
     }
     return 0;
